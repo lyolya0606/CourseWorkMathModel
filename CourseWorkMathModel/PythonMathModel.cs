@@ -21,14 +21,15 @@ namespace CourseWorkMathModel {
             _startConcentration = startConcentration;
             _reactionSpeed = reactionSpeed;
             _contactTime = contactTime;
-            RunScript("math_model.py");
         }
 
 
 
-        private void RunScript(string scriptName) {
+        public List<List<double>> RunScript() {
+            string scriptName = "math_model.py";
             Runtime.PythonDLL = @"python-3.9.13-embed-amd64\python39.dll";
             PythonEngine.Initialize();
+            List<List<double>> concentation = new();
             try {
                 using (Py.GIL()) {
 
@@ -52,27 +53,27 @@ namespace CourseWorkMathModel {
 
 
                         var result = scope.InvokeMethod("calculate_math_model", new PyObject[] { concentrationListPy, speedListPy, contactTimePy }).ToString();
-                        //var x = JArray.Parse(result);
                         dynamic concentrationsJson = JsonConvert.DeserializeObject(result);
 
-                        List<List<double>> concentation = new();
-        
-                        // TODO: Why 23 concentration
+
                         foreach (var conc in concentrationsJson) {
                             string currentDataString = conc.Value.ToString();
-                            currentDataString = currentDataString.Substring(5, currentDataString.Length - 9);
+    
+
+                            currentDataString = currentDataString.Substring(5, currentDataString.Length - 8);
                             string[] currentDataArray = currentDataString.Split(",\r\n");
-                            //str = str.Substring(3, str.Length - 3);
                             List<double> concList = new();
                             foreach (string s in currentDataArray) {
-                                concList.Add(double.Parse(s));
+                                double parsedS = double.Parse(s);
+                                if (parsedS < 0) {
+                                    parsedS = 0;
+                                }
+                                concList.Add(parsedS);
                             }
-                            //List<double> concList = str.Split(' ').Select(Double.Parse).ToList();
+
                             concentation.Add(concList);
                         }
                         
-                        
- 
 
                     }
                 }
@@ -80,6 +81,8 @@ namespace CourseWorkMathModel {
             } finally {
                 PythonEngine.Shutdown();
             }
+
+            return concentation;
 
 
         }

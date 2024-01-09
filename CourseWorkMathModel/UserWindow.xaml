@@ -1,4 +1,4 @@
-﻿<Window x:Class="CourseWorkMathModel.UserWindow"
+﻿<Window x:Name="mainUserWindow" x:Class="CourseWorkMathModel.UserWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,13 +7,13 @@
         xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         FontFamily="{StaticResource Inter}"
-        Title="Расчет концентраций" Height="750" Width="1200"
+        Title="Расчет концентраций" Height="750" Width="1500"
         ResizeMode="NoResize"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen" Closing="mainUserWindowClosing" Closed="mainUserWindowClosed">
 
     <StackPanel Orientation="Horizontal"  Margin="10, 10, 10, 5">
         <StackPanel Width="54" HorizontalAlignment="Left">
-            <Button x:Name="back_Button"  FontWeight="Bold" Content="Выйти" Background="White" BorderBrush="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button x:Name="back_Button"  FontWeight="Bold" Content="Выйти" Background="White" BorderBrush="White" HorizontalAlignment="Center" VerticalAlignment="Center" Click="back_ButtonClick"/>
         </StackPanel>
 
         <StackPanel Orientation="Vertical" Margin="-30, 10, 10, 0" Width="338">
@@ -28,14 +28,14 @@
             </StackPanel>
         </StackPanel>
 
-        <StackPanel Orientation="Vertical" Margin="40, 10, 10, 0">
+        <StackPanel Orientation="Vertical" Margin="10, 10, 10, 0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="0, 10, 0, 0" x:Name="chooseButton" Background="White" HorizontalAlignment="Center" FontSize="14" Height="32" Width="145" FontWeight="Bold" Content="Выбрать вещество"/>
-                <Button Margin="100, 10, 0, 0" x:Name="showTableButton" Background="White" HorizontalAlignment="Center" FontSize="14" Height="32" Width="145" FontWeight="Bold" Content="Показать таблицу"/>
+                <Button Margin="0, 10, 0, 0" x:Name="chooseButton" Background="White" HorizontalAlignment="Center" FontSize="14" Height="32" Width="145" FontWeight="Bold" Content="Выбрать вещество" Click="chooseButtonClick"/>
+                <Button Margin="100, 10, 0, 0" x:Name="showTableButton" Background="White" HorizontalAlignment="Center" FontSize="14" Height="32" Width="145" FontWeight="Bold" Content="Показать таблицу" Click="showTableButton_Click" IsEnabled="False"/>
             </StackPanel>
 
             <StackPanel Margin="40, 10, 30, 0">
-                <wpf:CartesianChart Name="concChart" Series="{Binding SeriesCollectionTemp}" LegendLocation="Right" Height="555" Width="720"/>
+                <wpf:CartesianChart Name="concChart" Series="{Binding SeriesCollectionConc}" LegendLocation="Right" Height="555" Width="1047"/>
             </StackPanel>
 
             <StackPanel Margin="40, 10, 0, 0" Orientation="Horizontal" HorizontalAlignment="Center">
