@@ -12,8 +12,11 @@
     <PackageReference Include="JsonConverter.Newtonsoft.Json" Version="0.5.0" />
     <PackageReference Include="LiveCharts" Version="0.9.7" />
     <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.1" />
     <PackageReference Include="Python.Runtime" Version="2.7.9" />
     <PackageReference Include="pythonnet" Version="3.0.3" />
+    <PackageReference Include="SQLite" Version="3.13.0" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
   </ItemGroup>
 
 </Project>

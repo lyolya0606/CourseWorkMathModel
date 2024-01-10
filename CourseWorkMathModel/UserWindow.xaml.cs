@@ -16,6 +16,7 @@ using LiveCharts.Defaults;
 using LiveCharts;
 using LiveCharts.Wpf;
 using static Python.Runtime.TypeSpec;
+using System.IO;
 
 
 namespace CourseWorkMathModel {
@@ -27,21 +28,42 @@ namespace CourseWorkMathModel {
         private const int COUNT_OF_REACTIONS = 21;
         private List<List<double>> _concentrations = new();
         private List<int> _chosenElements = new() { 17 };
-        private ChooseElementWindow _chooseElementWindow = new();
+        //private ChooseElementWindow _chooseElementWindow = new() { 17 };
         private List<string> _elements = new() { "CCl" + '\u2082' + "=CClH", "HF", "CrF" + '\u2083', "[CCl" + '\u2082' + "=CClH * HF * CrF" + '\u2083' + "]",
             "CFCl" + '\u2082' + "-CClH" + '\u2082', "CFCl=CClH", "HCl", "[CFCl" + '\u2082' + " - CClH" + '\u2082' + " * CrF" + '\u2083' + "]", "[CFCl=CClH * HF * CrF" + '\u2083' + "]",
             "CF" + '\u2082' + "Cl-CClH" + '\u2082', "CrF" + '\u2082' + "Cl", "CCl" + '\u2083' + "-CClH" + '\u2082', "[CCl" + '\u2083' + "-CClH" + '\u2082' + " * CrF" + '\u2083' + "]",
             "[CF" + '\u2082' + "Cl-CClH" + '\u2082' + " * CrF" + '\u2083' + "]", "CF" + '\u2082' + "=CClH", "[CF" + '\u2082' + "=CClH" + '\u2082' + " * HF * CrF", "CF" + '\u2083' + "-CClH" + '\u2082',
             "CF" + '\u2083' + "-CFH" + '\u2082', "[2CF" + '\u2083' + "-CClH" + '\u2082' + " * CrF" + '\u2083' + "]", "CF" + '\u2083' + "-CH" + '\u2083', "CF" + '\u2083' + "-CCl" + '\u2082' + "H",
             "CF" + '\u2083' + "-CFClH", "CF" + '\u2083' + "-CF" + '\u2082' + "H"};
+        private bool _isBackButton = false;
+        private bool _ifFirstEnter = true;
+        private List<double> _aValues = new();
+        private List<double> _eValues = new();
+        private string _method;
 
+        private Dictionary<string, string> _dictMethods = new Dictionary<string, string>() {
+            { "Метод Гира", "BDF"},
+            { "Метод Адамса", "LSODA"},
+            { "Неявный метод Рунге-Кутта третьего порядка точности", "Radau"},
+        };
 
         public UserWindow() {
             InitializeComponent();
             FillTable();
             concChart.AxisX.Clear();
             concChart.AxisY.Clear();
+            GetValues();
+        }
 
+        private void GetValues() {
+            DatabaseWork databaseWork = new DatabaseWork();
+            _aValues = databaseWork.GetAValues();
+            _eValues = databaseWork.GetEValues();
+
+            StreamReader sr = new StreamReader("method.txt");
+            string line = sr.ReadLine();
+            sr.Close();
+            _method = _dictMethods[line];
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e) {
@@ -125,23 +147,66 @@ namespace CourseWorkMathModel {
         private double GetContactTime() {
             return double.Parse(timeTextBox.Text);
         }
+        private double GetTemperature() {
+            return double.Parse(temperatureTextBox.Text);
+        }
 
-        // TODO: -0 wtf
-        private void calculateButton_Click(object sender, RoutedEventArgs e) {
+        private async Task DoWorkAsync() {
             List<double> startConcentrations = new();
             try {
                 startConcentrations = GetStartConcentration();
             } catch (Exception) {
                 return;
             }
-            List<double> reactionSpeed = GetReactionSpeed();
+            //List<double> reactionSpeed = GetReactionSpeed();
             double contactTime = GetContactTime();
+            double temperature = GetTemperature();
 
-            PythonMathModel pythonMathModel = new PythonMathModel(startConcentrations, reactionSpeed, contactTime);
-            _concentrations = pythonMathModel.RunScript();
+
+            await Task.Run(() => {
+                PythonMathModel pythonMathModel = new PythonMathModel(startConcentrations, _aValues, _eValues, temperature, contactTime, _method);
+                _concentrations = pythonMathModel.RunScript();
+
+            });
             DrawCharts();
+            calculateButton.Content = "Рассчитать";
             showTableButton.IsEnabled = true;
         }
+
+        private async void StartWorking() {
+            calculateButton.Content = "Загрузка...";
+            progressBar.IsIndeterminate = true;
+
+            await DoWorkAsync();
+
+
+            progressBar.IsIndeterminate = false;
+            progressBar.Value = 0;
+
+
+        }
+
+        // TODO: -0 wtf
+        private void calculateButton_Click(object sender, RoutedEventArgs e) {
+            //progressBar.IsIndeterminate = true;
+            //progressBar.Visibility = Visibility.Visible;
+            //List<double> startConcentrations = new();
+            //try {
+            //    startConcentrations = GetStartConcentration();
+            //} catch (Exception) {
+            //    return;
+            //}
+            //List<double> reactionSpeed = GetReactionSpeed();
+            //double contactTime = GetContactTime();
+
+            //PythonMathModel pythonMathModel = new PythonMathModel(startConcentrations, reactionSpeed, contactTime);
+            //_concentrations = pythonMathModel.RunScript();
+            //DrawCharts();
+            //showTableButton.IsEnabled = true;
+            //progressBar.IsIndeterminate = false;
+            StartWorking();
+        }
+
         public Func<ChartPoint, string> PointLabel { get; set; }
         public SeriesCollection SeriesCollectionConc { get; set; }
         Func<double, string> FormatFunc = (x) => string.Format("{0:0.0000}", x);
@@ -152,29 +217,51 @@ namespace CourseWorkMathModel {
         }
 
         private void chooseButtonClick(object sender, RoutedEventArgs e) {
-            _chooseElementWindow.ShowDialog();
-            _chosenElements = _chooseElementWindow.GetChosenElements();
+            if (_ifFirstEnter) {
+                List<int> firstElements = new() { 17 };
+                ChooseElementWindow chooseElementWindow = new(firstElements);
+                chooseElementWindow.ShowDialog();
+                _chosenElements = chooseElementWindow.GetChosenElements();
+                _ifFirstEnter = false;
+            } else {
+                ChooseElementWindow chooseElementWindow = new(_chosenElements);
+                chooseElementWindow.ShowDialog();
+                _chosenElements = chooseElementWindow.GetChosenElements();
+            }
+
+            //_chooseElementWindow.ShowDialog();
+            //_chosenElements = _chooseElementWindow.GetChosenElements();
 
         }
 
         private void mainUserWindowClosing(object sender, System.ComponentModel.CancelEventArgs e) {
-            //if (_chooseElementWindow.IsActive) {
+            //if (_chooseElementWindow.Visibility == Visibility.Hidden) {
             //    _chooseElementWindow.Close();
             //}
+            //if (!_isBackButton) {
+            //    Environment.Exit(0);
+            //}
+            // GC.Collect();
         }
 
         private void mainUserWindowClosed(object sender, EventArgs e) {
-            if (_chooseElementWindow.Visibility == Visibility.Hidden) {
-                _chooseElementWindow.Close();
-            }
-            this.Close();
+            //if (_chooseElementWindow.Visibility == Visibility.Hidden) {
+            //    _chooseElementWindow.Close();
+            //}
+            //if (!_isBackButton) {
+            //    Environment.Exit(0);
+            //}
+            //GC.Collect();
+
+
         }
 
         private Brush[] _colors = { Brushes.Blue, Brushes.Red, Brushes.Purple, Brushes.Pink, Brushes.Orange, Brushes.Green, Brushes.Gold, Brushes.Gray,
         Brushes.GreenYellow, Brushes.SkyBlue, Brushes.DarkOliveGreen, Brushes.Black, Brushes.Brown, Brushes.DarkBlue, Brushes.HotPink, Brushes.Lime, Brushes.Plum, 
-        Brushes.Tomato, Brushes.Cyan, Brushes.DarkViolet, Brushes.DarkMagenta, Brushes.Peru, Brushes.Maroon};
+        Brushes.Tomato, Brushes.Cyan, Brushes.DarkViolet, Brushes.DarkMagenta, Brushes.Peru, Brushes.Maroon };
 
         private void back_ButtonClick(object sender, RoutedEventArgs e) {
+            _isBackButton = true;
             new LoginWindow().Show();
             Close();
         }
@@ -201,7 +288,7 @@ namespace CourseWorkMathModel {
 
                 LineSeries line = new LineSeries {
                     Values = new ChartValues<ObservablePoint>(points),
-                    PointGeometrySize = 10,
+                    PointGeometrySize = 8,
                     Fill = Brushes.Transparent,
                     LabelPoint = PointLabel,
                     Title = _elements[item],

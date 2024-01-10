@@ -21,10 +21,13 @@ namespace CourseWorkMathModel {
         private List<CheckBox> _checkBoxes = new();
         private List<int> _chosenElements = new();
         private bool _firstEnter = true;
+        private bool _fillAll = true;
 
-        public ChooseElementWindow() {
+        public ChooseElementWindow(List<int> chosenElements) {
             InitializeComponent();
             FillCheckBoxes();
+            _chosenElements = chosenElements;
+
             foreach (int element in _chosenElements) {
                 _checkBoxes[element].IsChecked = true;
             }
@@ -46,10 +49,10 @@ namespace CourseWorkMathModel {
                 _checkBoxes.Add(box);
             }
 
-            if (_firstEnter) {
-                _checkBoxes[17].IsChecked = true;
-                _firstEnter = false;
-            }
+            //if (_firstEnter) {
+            //    _checkBoxes[17].IsChecked = true;
+            //    _firstEnter = false;
+            //}
 
             elementsGroupBox.Content = new StackPanel() {
                 Children = { _checkBoxes[0], _checkBoxes[1], _checkBoxes[2], _checkBoxes[3], _checkBoxes[4], _checkBoxes[5], _checkBoxes[6], _checkBoxes[7], _checkBoxes[8], _checkBoxes[9],
@@ -76,15 +79,18 @@ namespace CourseWorkMathModel {
                 return;
             } else {
                 MessageBox.Show("Изменения применены", "Успех!", MessageBoxButton.OK);
-                this.Hide();
+                this.Close();
             }
 
         }
 
         private void allButton_Click(object sender, RoutedEventArgs e) {
+
             for (int i = 0; i < _checkBoxes.Count; i++) {
-                _checkBoxes[i].IsChecked = true;
+                _checkBoxes[i].IsChecked = _fillAll;
             }
+            _fillAll = !_fillAll;
+     
         }
     }
 }

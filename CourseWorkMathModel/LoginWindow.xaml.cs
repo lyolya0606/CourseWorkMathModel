@@ -23,7 +23,10 @@ namespace CourseWorkMathModel {
                 //Hide();
                 new UserWindow().Show();
                 Close();
-            } 
+            } else if (loginComboBox.Text == "admin" && passwordTextBox.Password == "admin") {
+                new AdminWindow().Show();
+                Close();
+            }
         }
     }
 }

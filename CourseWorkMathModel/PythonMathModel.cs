@@ -12,15 +12,23 @@ using System.Net;
 namespace CourseWorkMathModel {
     class PythonMathModel {
         private List<double> _startConcentration = new();
-        private List<double> _reactionSpeed = new();
+        private List<double> _aValues = new();
+        private List<double> _eValues = new();
+        private double _temperature;
+        private string _method;
+        //private List<double> _reactionSpeed = new();
         private double _contactTime;
         private const int COUNT_OF_ELEMENTS = 23;
         private const int COUNT_OF_SPEED = 21;
 
-        public PythonMathModel(List<double> startConcentration, List<double> reactionSpeed, double contactTime) {
+        public PythonMathModel(List<double> startConcentration, List<double> aValues, List<double> eValues, double temperature,  double contactTime, string method) {
             _startConcentration = startConcentration;
-            _reactionSpeed = reactionSpeed;
+            _aValues = aValues;
+            _eValues = eValues;
+            _temperature = temperature;
+           // _reactionSpeed = reactionSpeed;
             _contactTime = contactTime;
+            _method = method;
         }
 
 
@@ -44,15 +52,24 @@ namespace CourseWorkMathModel {
                             concentrationListPy.Append(new PyFloat(_startConcentration[i]));
                         }
 
-                        var speedListPy = new PyList();
+                        var aListPy = new PyList();
                         for (int i = 0; i < COUNT_OF_SPEED; i++) {
-                            speedListPy.Append(new PyFloat(_reactionSpeed[i]));
+                            aListPy.Append(new PyFloat(_aValues[i]));
                         }
+
+                        var eListPy = new PyList();
+                        for (int i = 0; i < COUNT_OF_SPEED; i++) {
+                            eListPy.Append(new PyFloat(_eValues[i]));
+                        }
+
+                        var temperaturePy = new PyFloat(_temperature);
 
                         var contactTimePy = new PyFloat(_contactTime);
 
+                        var methodPy = new PyString(_method);
 
-                        var result = scope.InvokeMethod("calculate_math_model", new PyObject[] { concentrationListPy, speedListPy, contactTimePy }).ToString();
+
+                        var result = scope.InvokeMethod("calculate_math_model", new PyObject[] { concentrationListPy, aListPy, eListPy, temperaturePy, contactTimePy, methodPy }).ToString();
                         dynamic concentrationsJson = JsonConvert.DeserializeObject(result);
 
 
