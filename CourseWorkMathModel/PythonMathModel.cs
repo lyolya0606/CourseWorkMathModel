@@ -8,6 +8,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Python.Runtime;
 using System.IO;
 using System.Net;
+using System.Globalization;
 
 namespace CourseWorkMathModel {
     class PythonMathModel {
@@ -68,6 +69,8 @@ namespace CourseWorkMathModel {
 
                         var methodPy = new PyString(_method);
 
+                        NumberFormatInfo format = new NumberFormatInfo();
+                        format.NumberGroupSeparator = ".";
 
                         var result = scope.InvokeMethod("calculate_math_model", new PyObject[] { concentrationListPy, aListPy, eListPy, temperaturePy, contactTimePy, methodPy }).ToString();
                         dynamic concentrationsJson = JsonConvert.DeserializeObject(result);
@@ -80,8 +83,10 @@ namespace CourseWorkMathModel {
                             currentDataString = currentDataString.Substring(5, currentDataString.Length - 8);
                             string[] currentDataArray = currentDataString.Split(",\r\n");
                             List<double> concList = new();
-                            foreach (string s in currentDataArray) {
-                                double parsedS = double.Parse(s);
+                            foreach (string s in currentDataArray)
+                            {
+                               // s.Replace('.', ',');
+                                double parsedS = double.Parse(s, format);
                                 if (parsedS < 0) {
                                     parsedS = 0;
                                 }

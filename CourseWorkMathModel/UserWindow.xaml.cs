@@ -17,6 +17,7 @@ using LiveCharts;
 using LiveCharts.Wpf;
 using static Python.Runtime.TypeSpec;
 using System.IO;
+using System.Globalization;
 
 
 namespace CourseWorkMathModel {
@@ -122,11 +123,14 @@ namespace CourseWorkMathModel {
 
         private List<double> GetStartConcentration() {
             List<double> startConcentrations = new();
+            NumberFormatInfo format = new NumberFormatInfo();
+            format.NumberGroupSeparator = ".";
 
             for (int i = 0; i < COUNT_OF_ELEMENTS; i++) {
                 try {
                     var x = concDataGrid.Columns[1].GetCellContent(concDataGrid.Items[i]) as TextBlock;
-                    startConcentrations.Add(double.Parse(x.Text));
+         
+                    startConcentrations.Add(double.Parse(x.Text, format));
                 } catch (Exception)  {
                     
                 } 
@@ -168,18 +172,19 @@ namespace CourseWorkMathModel {
                 _concentrations = pythonMathModel.RunScript();
 
             });
-            DrawCharts();
-            calculateButton.Content = "Рассчитать";
-            showTableButton.IsEnabled = true;
+            
         }
 
         private async void StartWorking() {
-            calculateButton.Content = "Загрузка...";
+            calculateButton.Content = "Подсчет...";
             progressBar.IsIndeterminate = true;
 
             await DoWorkAsync();
 
 
+            DrawCharts();
+            calculateButton.Content = "Рассчитать";
+            showTableButton.IsEnabled = true;
             progressBar.IsIndeterminate = false;
             progressBar.Value = 0;
 

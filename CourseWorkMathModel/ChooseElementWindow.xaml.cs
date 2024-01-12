@@ -78,7 +78,6 @@ namespace CourseWorkMathModel {
                 MessageBox.Show("Вещества не выбраны", "Ошибка!", MessageBoxButton.OK);
                 return;
             } else {
-                MessageBox.Show("Изменения применены", "Успех!", MessageBoxButton.OK);
                 this.Close();
             }
 
@@ -88,6 +87,7 @@ namespace CourseWorkMathModel {
 
             for (int i = 0; i < _checkBoxes.Count; i++) {
                 _checkBoxes[i].IsChecked = _fillAll;
+                allButton.Content = !_fillAll ? "Выбрать все" : "Отменить все";
             }
             _fillAll = !_fillAll;
      
