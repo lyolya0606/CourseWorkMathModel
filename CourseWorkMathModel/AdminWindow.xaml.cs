@@ -30,7 +30,7 @@ namespace CourseWorkMathModel {
         }
 
         private void back_ButtonClick(object sender, RoutedEventArgs e) {
-            StreamWriter sr = new StreamWriter("method.txt");
+            StreamWriter sr = new StreamWriter(@"..\..\..\ImportantFiles\method.txt");
             sr.WriteLine(methodComboBox.Text);
             sr.Close();
             new LoginWindow().Show();
@@ -44,7 +44,7 @@ namespace CourseWorkMathModel {
             methodComboBox.Items.Add("Метод Адамса");
             methodComboBox.Items.Add("Неявный метод Рунге-Кутта третьего порядка точности");
 
-            StreamReader sr = new StreamReader("method.txt");
+            StreamReader sr = new StreamReader(@"..\..\..\ImportantFiles\method.txt");
             string line = sr.ReadLine();
             sr.Close();
 

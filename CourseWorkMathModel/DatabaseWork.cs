@@ -10,12 +10,13 @@ namespace CourseWorkMathModel {
     public class DatabaseWork {
 
         private SQLiteConnection _sqlite_conn;
+        private string _pathToDB = @"Data Source=..\..\..\ImportantFiles\databaseCourseWork.db";
         public DatabaseWork() {
    
         }
 
         public List<List<string>> GetAFromDatabase() {
-            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=databaseCourseWork.db");
+            SQLiteConnection sqlite_conn = new SQLiteConnection(_pathToDB);
             sqlite_conn.Open();
             SQLiteDataReader sqlite_datareader;
             SQLiteCommand sqlite_cmd;
@@ -37,7 +38,7 @@ namespace CourseWorkMathModel {
         }
 
         public List<List<string>> GetEFromDatabase() {
-            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=databaseCourseWork.db");
+            SQLiteConnection sqlite_conn = new SQLiteConnection(_pathToDB);
             sqlite_conn.Open();
             SQLiteDataReader sqlite_datareader;
             SQLiteCommand sqlite_cmd;
@@ -59,7 +60,7 @@ namespace CourseWorkMathModel {
         }
 
         public void UpdateAE(string id, string name) {
-            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=databaseCourseWork.db");
+            SQLiteConnection sqlite_conn = new SQLiteConnection(_pathToDB);
             sqlite_conn.Open();
             SQLiteCommand sqlite_cmd;
             sqlite_cmd = sqlite_conn.CreateCommand();
@@ -71,7 +72,7 @@ namespace CourseWorkMathModel {
         }
 
         public void UpdateAEValue(string id, double value) {
-            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=databaseCourseWork.db");
+            SQLiteConnection sqlite_conn = new SQLiteConnection(_pathToDB);
             sqlite_conn.Open();
             SQLiteCommand sqlite_cmd;
             sqlite_cmd = sqlite_conn.CreateCommand();
@@ -83,7 +84,7 @@ namespace CourseWorkMathModel {
         }
 
         public List<double> GetAValues() {
-            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=databaseCourseWork.db");
+            SQLiteConnection sqlite_conn = new SQLiteConnection(_pathToDB);
             sqlite_conn.Open();
             SQLiteDataReader sqlite_datareader;
             SQLiteCommand sqlite_cmd;
@@ -102,7 +103,7 @@ namespace CourseWorkMathModel {
         }
 
         public List<double> GetEValues() {
-            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=databaseCourseWork.db");
+            SQLiteConnection sqlite_conn = new SQLiteConnection(_pathToDB);
             sqlite_conn.Open();
             SQLiteDataReader sqlite_datareader;
             SQLiteCommand sqlite_cmd;

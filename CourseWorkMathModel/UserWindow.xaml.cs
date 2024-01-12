@@ -61,7 +61,7 @@ namespace CourseWorkMathModel {
             _aValues = databaseWork.GetAValues();
             _eValues = databaseWork.GetEValues();
 
-            StreamReader sr = new StreamReader("method.txt");
+            StreamReader sr = new StreamReader(@"..\..\..\ImportantFiles\method.txt");
             string line = sr.ReadLine();
             sr.Close();
             _method = _dictMethods[line];

@@ -35,7 +35,7 @@ namespace CourseWorkMathModel {
 
 
         public List<List<double>> RunScript() {
-            string scriptName = "math_model.py";
+            string scriptName = @"..\..\..\ImportantFiles\math_model.py";
             Runtime.PythonDLL = @"python-3.9.13-embed-amd64\python39.dll";
             PythonEngine.Initialize();
             List<List<double>> concentation = new();
