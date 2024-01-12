@@ -176,6 +176,7 @@ namespace CourseWorkMathModel {
         }
 
         private async void StartWorking() {
+            finishConcLabel.Content = "-";
             calculateButton.Content = "Подсчет...";
             progressBar.IsIndeterminate = true;
 
@@ -185,6 +186,7 @@ namespace CourseWorkMathModel {
             DrawCharts();
             calculateButton.Content = "Рассчитать";
             showTableButton.IsEnabled = true;
+            finishConcLabel.Content = Math.Round(_concentrations[18][_concentrations[18].Count - 1], 4);
             progressBar.IsIndeterminate = false;
             progressBar.Value = 0;
 

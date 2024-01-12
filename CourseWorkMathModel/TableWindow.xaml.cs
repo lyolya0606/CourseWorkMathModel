@@ -27,6 +27,11 @@ namespace CourseWorkMathModel {
 
         private void SetUpColumns() {
             var column = new DataGridTextColumn {
+                Header = "Номер шага",
+                Binding = new Binding("Step")
+            };
+            valuesDataGrid.Columns.Add(column);
+            column = new DataGridTextColumn {
                 Header = "Время контакта, с",
                 Binding = new Binding("Time")
             };
@@ -149,6 +154,7 @@ namespace CourseWorkMathModel {
         }
 
         private record DataForTable {
+            public required int Step { get; set; }
             public required double Time { get; set; }
             public required double Concentration1 { get; set; }
             public required double Concentration2 { get; set; }
@@ -181,6 +187,7 @@ namespace CourseWorkMathModel {
             
             for (int i = 0; i < _concentrations[0].Count; i++) {
                 data.Add(new DataForTable {
+                    Step = i,
                     Time = Math.Round(_concentrations[0][i], 4),
                     Concentration1 = Math.Round(_concentrations[1][i], 4),
                     Concentration2 = Math.Round(_concentrations[2][i], 4),
