@@ -109,7 +109,7 @@ def deriv(t, y):
 def arrenius(A, E, t):
     k_calc = []
     for i in range(len(A)):
-        k_calc.append(A[i] * math.pow(math.e, (-E[i] / (8.31 * t))))
+        k_calc.append(math.exp(A[i]) * math.exp(-E[i] * 1000 / (8.31 * (t + 273))))
     return k_calc
 
 
