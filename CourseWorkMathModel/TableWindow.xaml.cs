@@ -184,34 +184,35 @@ namespace CourseWorkMathModel {
         private void FillTable() {
             SetUpColumns();
             List<DataForTable> data = new();
+            const int COUNT_ROUND = 15;
             
             for (int i = 0; i < _concentrations[0].Count; i++) {
                 data.Add(new DataForTable {
                     Step = i,
-                    Time = Math.Round(_concentrations[0][i], 4),
-                    Concentration1 = Math.Round(_concentrations[1][i], 4),
-                    Concentration2 = Math.Round(_concentrations[2][i], 4),
-                    Concentration3 = Math.Round(_concentrations[3][i], 4),
-                    Concentration4 = Math.Round(_concentrations[4][i], 4),
-                    Concentration5 = Math.Round(_concentrations[5][i], 4),
-                    Concentration6 = Math.Round(_concentrations[6][i], 4),
-                    Concentration7 = Math.Round(_concentrations[7][i], 4),
-                    Concentration8 = Math.Round(_concentrations[8][i], 4),
-                    Concentration9 = Math.Round(_concentrations[9][i], 4),
-                    Concentration10 = Math.Round(_concentrations[10][i], 4),
-                    Concentration11 = Math.Round(_concentrations[11][i], 4),
-                    Concentration12 = Math.Round(_concentrations[12][i], 4),
-                    Concentration13 = Math.Round(_concentrations[13][i], 4),
-                    Concentration14 = Math.Round(_concentrations[14][i], 4),
-                    Concentration15 = Math.Round(_concentrations[15][i], 4),
-                    Concentration16 = Math.Round(_concentrations[16][i], 4),
-                    Concentration17 = Math.Round(_concentrations[17][i], 4),
-                    Concentration18 = Math.Round(_concentrations[18][i], 4),
-                    Concentration19 = Math.Round(_concentrations[19][i], 4),
-                    Concentration20 = Math.Round(_concentrations[20][i], 4),
-                    Concentration21 = Math.Round(_concentrations[21][i], 4),
-                    Concentration22 = Math.Round(_concentrations[22][i], 4),
-                    Concentration23 = Math.Round(_concentrations[23][i], 4)
+                    Time = Math.Round(_concentrations[0][i], COUNT_ROUND),
+                    Concentration1 = Math.Round(_concentrations[1][i], COUNT_ROUND),
+                    Concentration2 = Math.Round(_concentrations[2][i], COUNT_ROUND),
+                    Concentration3 = Math.Round(_concentrations[3][i], COUNT_ROUND),
+                    Concentration4 = Math.Round(_concentrations[4][i], COUNT_ROUND),
+                    Concentration5 = Math.Round(_concentrations[5][i], COUNT_ROUND),
+                    Concentration6 = Math.Round(_concentrations[6][i], COUNT_ROUND),
+                    Concentration7 = Math.Round(_concentrations[7][i], COUNT_ROUND),
+                    Concentration8 = Math.Round(_concentrations[8][i], COUNT_ROUND),
+                    Concentration9 = Math.Round(_concentrations[9][i], COUNT_ROUND),
+                    Concentration10 = Math.Round(_concentrations[10][i], COUNT_ROUND),
+                    Concentration11 = Math.Round(_concentrations[11][i], COUNT_ROUND),
+                    Concentration12 = Math.Round(_concentrations[12][i], COUNT_ROUND),
+                    Concentration13 = Math.Round(_concentrations[13][i], COUNT_ROUND),
+                    Concentration14 = Math.Round(_concentrations[14][i], COUNT_ROUND),
+                    Concentration15 = Math.Round(_concentrations[15][i], COUNT_ROUND),
+                    Concentration16 = Math.Round(_concentrations[16][i], COUNT_ROUND),
+                    Concentration17 = Math.Round(_concentrations[17][i], COUNT_ROUND),
+                    Concentration18 = Math.Round(_concentrations[18][i], COUNT_ROUND),
+                    Concentration19 = Math.Round(_concentrations[19][i], COUNT_ROUND),
+                    Concentration20 = Math.Round(_concentrations[20][i], COUNT_ROUND),
+                    Concentration21 = Math.Round(_concentrations[21][i], COUNT_ROUND),
+                    Concentration22 = Math.Round(_concentrations[22][i], COUNT_ROUND),
+                    Concentration23 = Math.Round(_concentrations[23][i], COUNT_ROUND)
                 });
                 
             }
